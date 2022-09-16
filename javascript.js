@@ -21,7 +21,7 @@ function getPlayerAction() {
 
 function round(playerSelection, computerSelection) {
     if (playerSelection === computerSelection) {
-        return 'It\' a draw!';
+        return 'It\'s a draw!';
     } else if (playerSelection === 'rock') {
         if (computerSelection === 'paper') {
             return 'You lost! Paper beats rock';
@@ -48,8 +48,16 @@ function game() {
     let computerScore = 0;
     for(let i = 1; i <= 5; i++) {
         let result = round(getPlayerAction(), getComputerAction());
-        (result.startsWith('You won')) ? playerScore++ : computerScore++;
+        if (!result.startsWith('It\'s a draw')) {
+            (!result.startsWith('You won')) ? playerScore++ : computerScore++;
+        }
         console.log(`${result}. Your score is ${playerScore}, PC\'s score is ${computerScore}`);
     }
     (computerScore>playerScore) ? console.log('Computer won!') : console.log('Player won!')
+
+    // Ask if player wants to play another round
+    let answer = prompt('Do you wanna play again? (print Y/y to start and N/n to refuse)');
+    (answer.toLowerCase() == 'y') ? game() : console.log('Maybe next time :)');
 }
+
+game();

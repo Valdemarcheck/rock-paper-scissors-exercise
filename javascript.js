@@ -43,7 +43,13 @@ function round(playerSelection, computerSelection) {
     }
 }
 
-
-
-round(getPlayerAction(), getComputerAction());
-
+function game() {
+    let playerScore = 0;
+    let computerScore = 0;
+    for(let i = 1; i <= 5; i++) {
+        let result = round(getPlayerAction(), getComputerAction());
+        (result.startsWith('You won')) ? playerScore++ : computerScore++;
+        console.log(`${result}. Your score is ${playerScore}, PC\'s score is ${computerScore}`);
+    }
+    (computerScore>playerScore) ? console.log('Computer won!') : console.log('Player won!')
+}

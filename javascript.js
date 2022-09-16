@@ -1,21 +1,18 @@
-// create a function that randomly returns rock, paper or scissors
-//  create a private array that contains 'rock', 'paper' and 'scissors'
-//  elements
-//  let function produce a random number between 0 and 2, floor it, and
-//  return a label with index of that random number
-// create a function that plays one round of rock, paper, scissors
-//  prompt user for an action and save it in a variable
-//  execute getComputerAction() and put it in a variable
-// compare two variables
-// make a giant switch case for each possible case
 
+// Warning: this code is not performance friendly and will fill
+// can result into stack overflow if executed for too long
+
+// possible computer actions
 let actions = ['rock', 'paper', 'scissors'];
 
+// get a random computer action
 function getComputerAction() {
     return actions[Math.floor(Math.random()*3)];
 }
 
+// returns player action
 function getPlayerAction() {
+    // executes infinitely until player prompts an appropriate game action
     while (true) {
         let playerAction = prompt('What is your action?').toLowerCase();
         if (playerAction === 'scissors' || playerAction === 'paper' || playerAction === 'rock') {
@@ -27,7 +24,10 @@ function getPlayerAction() {
     
 }
 
+// plays one round of the game and executes a result
 function round(playerSelection, computerSelection) {
+
+    // exclude case sensitivity
     playerSelection = playerSelection.toLowerCase();
     computerSelection = computerSelection.toLowerCase();
 
@@ -54,21 +54,19 @@ function round(playerSelection, computerSelection) {
     } 
 }
 
-
-
-function game() {
+function game() { // a game of 5 rounds
+    // scores setup
     let playerScore = 0;
     let computerScore = 0;
 
-    for(let i = 1; i <= 5; i++) {
+    for(let i = 1; i <= 5; i++) { // play a round for 5 times
         let result = round(getPlayerAction(), getComputerAction());
-        if (!result.startsWith('It\'s a draw')) {
-            (result.startsWith('You won')) ? playerScore++ : computerScore++;
+        if (!result.startsWith('It\'s a draw')) { // doesn't give score to anyone if it's a draw
+            (result.startsWith('You won')) ? playerScore++ : computerScore++; // give +1 score to winner of the round
         }
         console.log(`${result}. Your score is ${playerScore}, PC\'s score is ${computerScore}`);
-        setTimeout(2000);
     }
-    if (!(computerScore===playerScore)) {
+    if (!(computerScore === playerScore)) { // if game isn't draw, announce a winner
         (computerScore>playerScore) ? console.log('Computer won!') : console.log('Player won!')
     } else {
         console.log('It\'s a draw! Nobody has won');

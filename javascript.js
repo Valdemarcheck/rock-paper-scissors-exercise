@@ -1,7 +1,4 @@
 
-// Warning: this code is not performance friendly and will fill
-// can result into stack overflow if executed for too long
-
 // possible computer actions
 let actions = ['rock', 'paper', 'scissors'];
 

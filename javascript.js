@@ -5,38 +5,45 @@
 //  return a label with index of that random number
 // create a function that plays one round of rock, paper, scissors
 //  prompt user for an action and save it in a variable
-//  execute getAction() and put it in a variable
+//  execute getComputerAction() and put it in a variable
 // compare two variables
 // make a giant switch case for each possible case
 
-function getAction() {
-    let actions = ['rock', 'paper', 'scissors'];
+let actions = ['rock', 'paper', 'scissors'];
+
+function getComputerAction() {
     return actions[Math.floor(Math.random()*3)];
+}
+
+function getPlayerAction() {
+    return prompt('What is your action?').toLowerCase();
 }
 
 function round(playerSelection, computerSelection) {
     if (playerSelection === computerSelection) {
-        console.log('It\' a draw!');
+        return 'It\' a draw!';
     } else if (playerSelection === 'rock') {
         if (computerSelection === 'paper') {
-            console.log('You lost! Paper beats rock');
+            return 'You lost! Paper beats rock';
         } else {
-            console.log('You won! Rock beats scissors');
+            return 'You won! Rock beats scissors';
         }
     } else if (playerSelection === 'paper') {
         if (computerSelection === 'scissors') {
-            console.log('You lost! Scissors beat paper');
+            return 'You lost! Scissors beat paper';
         } else {
-            console.log('You won! Paper beats rock');
+            return 'You won! Paper beats rock';
         }
     } else if (playerSelection === 'scissors') {
         if (computerSelection === 'rock') {
-            console.log('You lost! Rock beats scissors');
+            return 'You lost! Rock beats scissors';
         } else {
-            console.log('You won! Scissors beat paper');
+            return 'You won! Scissors beat paper';
         }
     }
 }
 
-round(prompt('What is your action?').toLowerCase(), getAction());
+
+
+round(getPlayerAction(), getComputerAction());
 

@@ -16,10 +16,21 @@ function getComputerAction() {
 }
 
 function getPlayerAction() {
-    return prompt('What is your action?').toLowerCase();
+    while (true) {
+        let playerAction = prompt('What is your action?').toLowerCase();
+        if (playerAction === 'scissors' || playerAction === 'paper' || playerAction === 'rock') {
+            return playerAction;
+        } else {
+            console.log('Your output was incorrect. Please, input either "Rock", "Paper" or "Scissors"');
+        }
+    }
+    
 }
 
 function round(playerSelection, computerSelection) {
+    playerSelection = playerSelection.toLowerCase();
+    computerSelection = computerSelection.toLowerCase();
+
     if (playerSelection === computerSelection) {
         return 'It\'s a draw!';
     } else if (playerSelection === 'rock') {
@@ -40,24 +51,32 @@ function round(playerSelection, computerSelection) {
         } else {
             return 'You won! Scissors beat paper';
         }
-    }
+    } 
 }
+
+
 
 function game() {
     let playerScore = 0;
     let computerScore = 0;
+
     for(let i = 1; i <= 5; i++) {
         let result = round(getPlayerAction(), getComputerAction());
         if (!result.startsWith('It\'s a draw')) {
-            (!result.startsWith('You won')) ? playerScore++ : computerScore++;
+            (result.startsWith('You won')) ? playerScore++ : computerScore++;
         }
         console.log(`${result}. Your score is ${playerScore}, PC\'s score is ${computerScore}`);
+        setTimeout(2000);
     }
-    (computerScore>playerScore) ? console.log('Computer won!') : console.log('Player won!')
+    if (!(computerScore===playerScore)) {
+        (computerScore>playerScore) ? console.log('Computer won!') : console.log('Player won!')
+    } else {
+        console.log('It\'s a draw! Nobody has won');
+    }
 
     // Ask if player wants to play another round
     let answer = prompt('Do you wanna play again? (print Y/y to start and N/n to refuse)');
-    (answer.toLowerCase() == 'y') ? game() : console.log('Maybe next time :)');
+    (answer.toLowerCase() == 'y') ? game() : alert('Maybe next time :)');
 }
 
 game();

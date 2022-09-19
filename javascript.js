@@ -1,77 +1,112 @@
 
 // possible computer actions
-let actions = ['rock', 'paper', 'scissors'];
+let actions = [{name: 'rock',
+                beats: 'scissors',
+                beatenBy: 'paper'}, 
+                {name: 'paper',
+                beats: 'rock',
+                beatenBy: 'scissors'}, 
+                {name: 'scissors',
+                beats: 'paper',
+                beatenBy: 'rock'}];
 
-// get a random computer action
-function getComputerAction() {
-    return actions[Math.floor(Math.random()*3)];
+// public scores
+let pcScore = 0;
+let playerScore = 0;
+
+const resultDiv = document.createElement('div');
+resultDiv.classList.add('resultDiv');
+
+const scores = document.createElement('div');
+scores.classList.add('scoresDiv');
+
+let buttons = createButtons();
+
+document.body.appendChild(scores);
+document.body.appendChild(resultDiv);
+
+// create rock, paper and scissors buttons
+function createButtons() {
+
+    const rockButton = document.createElement('button')
+    rockButton.classList.add('rock');
+    rockButton.textContent = 'rock';
+    rockButton.addEventListener('click', function(){round('rock', get_PC_Action())});
+
+    const paperButton = document.createElement('button')
+    paperButton.classList.add('paper');
+    paperButton.textContent = 'paper';
+    paperButton.addEventListener('click', function(){round('paper', get_PC_Action())});
+
+    const scissorsButton = document.createElement('button')
+    scissorsButton.classList.add('scissors');
+    scissorsButton.textContent = 'scissors';
+    scissorsButton.addEventListener('click', function(){round('scissors', get_PC_Action())});
+
+    // append all buttons and text elements
+    document.body.appendChild(rockButton);
+    document.body.appendChild(paperButton);
+    document.body.appendChild(scissorsButton);
+    
+    return [rockButton, paperButton, scissorsButton];
 }
 
-// returns player action
-function getPlayerAction() {
-    // executes infinitely until player prompts an appropriate game action
-    while (true) {
-        let playerAction = prompt('What is your action?').toLowerCase();
-        if (playerAction === 'scissors' || playerAction === 'paper' || playerAction === 'rock') {
-            return playerAction;
-        } else {
-            console.log('Your output was incorrect. Please, input either "Rock", "Paper" or "Scissors"');
-        }
-    }
-    
+// get a random computer action
+function get_PC_Action() {
+    return actions[Math.floor(Math.random()*3)]['name'];
+}
+
+function restart() {
+    pcScore = 0;
+    playerScore = 0;
+
+    const restartBtn = document.body.querySelector('.restartButton');
+    resultDiv.textContent = '';
+    scores.textContent = `Your score: 0, PC\'s score: 0`;
+    document.body.removeChild(restartBtn)
+
+    rockButton.addEventListener('click', function(){round(actions[0]['name'], get_PC_Action())});
+    paperButton.addEventListener('click', function(){round(actions[1]['name'], get_PC_Action())});
+    scissorsButton.addEventListener('click', function(){round(actions[2]['name'], get_PC_Action())});
+}
+
+// create Restart button and remove eventListeners from action buttons
+function theEnd(buttons) {
+    // make a restart button
+    (pcScore === 5) ? resultDiv.textContent = `PC won!`: resultDiv.textContent = `You won!`;
+    const restartBtn = document.createElement('button')
+    restartBtn.classList.add('restartButton');
+    restartBtn.textContent = 'Restart';
+    restartBtn.addEventListener('click', function(){restart()});
+    document.body.appendChild(restartBtn);
+
+    // don't let player press action buttons until restart
+    buttons.forEach(btn => btn.removeEventListener('click', round));
 }
 
 // plays one round of the game and executes a result
-function round(playerSelection, computerSelection) {
+function round(playerSelect, pcSelect) {
 
-    // exclude case sensitivity
-    playerSelection = playerSelection.toLowerCase();
-    computerSelection = computerSelection.toLowerCase();
-
-    if (playerSelection === computerSelection) {
-        return 'It\'s a draw!';
-    } else if (playerSelection === 'rock') {
-        if (computerSelection === 'paper') {
-            return 'You lost! Paper beats rock';
-        } else {
-            return 'You won! Rock beats scissors';
-        }
-    } else if (playerSelection === 'paper') {
-        if (computerSelection === 'scissors') {
-            return 'You lost! Scissors beat paper';
-        } else {
-            return 'You won! Paper beats rock';
-        }
-    } else if (playerSelection === 'scissors') {
-        if (computerSelection === 'rock') {
-            return 'You lost! Rock beats scissors';
-        } else {
-            return 'You won! Scissors beat paper';
-        }
-    } 
-}
-
-function game() { // a game of 5 rounds
-    // scores setup
-    let playerScore = 0;
-    let computerScore = 0;
-
-    for(let i = 1; i <= 5; i++) { // play a round for 5 times
-        let result = round(getPlayerAction(), getComputerAction());
-        if (!result.startsWith('It\'s a draw')) { // doesn't give score to anyone if it's a draw
-            (result.startsWith('You won')) ? playerScore++ : computerScore++; // give +1 score to winner of the round
-        }
-        console.log(`${result}. Your score is ${playerScore}, PC\'s score is ${computerScore}`);
+    // check for a round's winner and announce him, modify his score
+    if (playerSelect === pcSelect) {
+        resultDiv.textContent = 'It\'s a draw!';
+    } else { // check wether a player or computer won by going through 'actions' array
+        for(let action of actions) {
+            if (action['name'] === playerSelect) { 
+                if (action['beats'] === pcSelect) {
+                    resultDiv.textContent = `You Won! Your ${playerSelect} beats PC's ${pcSelect}`;
+                    playerScore++;
+                    break; 
+                } else if (action['beatenBy'] === pcSelect) {
+                    resultDiv.textContent = `You lost! PC's ${pcSelect} beats your ${playerSelect}`;
+                    pcScore++;
+                    break;
+                }
+            }
+        };
     }
-    if (!(computerScore === playerScore)) { // if game isn't draw, announce a winner
-        (computerScore>playerScore) ? console.log('Computer won!') : console.log('Player won!')
-    } else {
-        console.log('It\'s a draw! Nobody has won');
-    }
-
-    // Ask if player wants to play another round
-    let answer = prompt('Do you wanna play again? (print Y/y to start and N/n to refuse)');
-    (answer.toLowerCase() == 'y') ? game() : alert('Maybe next time :)');
+    
+    // announce scores and check if there is a winner
+    scores.textContent = `Your score: ${playerScore}, PC\'s score: ${pcScore}`;
+    if (playerScore === 5 || pcScore === 5) theEnd(buttons);
 }
-
-game();

@@ -25,28 +25,35 @@ let buttons = createButtons();
 document.body.appendChild(scores);
 document.body.appendChild(resultDiv);
 
+// add eventListeners to action buttons
+rockButton.addEventListener('click', function(){round(actions[0]['name'], get_PC_Action())});
+paperButton.addEventListener('click', function(){round(actions[1]['name'], get_PC_Action())});
+scissorsButton.addEventListener('click', function(){round(actions[2]['name'], get_PC_Action())});
+
 // create rock, paper and scissors buttons
 function createButtons() {
 
     const rockButton = document.createElement('button')
-    rockButton.classList.add('rock');
     rockButton.textContent = 'rock';
     rockButton.addEventListener('click', function(){round('rock', get_PC_Action())});
 
     const paperButton = document.createElement('button')
-    paperButton.classList.add('paper');
     paperButton.textContent = 'paper';
     paperButton.addEventListener('click', function(){round('paper', get_PC_Action())});
 
     const scissorsButton = document.createElement('button')
-    scissorsButton.classList.add('scissors');
     scissorsButton.textContent = 'scissors';
     scissorsButton.addEventListener('click', function(){round('scissors', get_PC_Action())});
+
+    const resetBtn = document.createElement('button');
+    resetBtn.textContent = 'Reset';
+    resetBtn.addEventListener('click', ()=>location.reload());
 
     // append all buttons and text elements
     document.body.appendChild(rockButton);
     document.body.appendChild(paperButton);
     document.body.appendChild(scissorsButton);
+    document.body.appendChild(resetBtn);
     
     return [rockButton, paperButton, scissorsButton];
 }
@@ -56,29 +63,10 @@ function get_PC_Action() {
     return actions[Math.floor(Math.random()*3)]['name'];
 }
 
-function restart() {
-    pcScore = 0;
-    playerScore = 0;
-
-    const restartBtn = document.body.querySelector('.restartButton');
-    resultDiv.textContent = '';
-    scores.textContent = `Your score: 0, PC\'s score: 0`;
-    document.body.removeChild(restartBtn)
-
-    rockButton.addEventListener('click', function(){round(actions[0]['name'], get_PC_Action())});
-    paperButton.addEventListener('click', function(){round(actions[1]['name'], get_PC_Action())});
-    scissorsButton.addEventListener('click', function(){round(actions[2]['name'], get_PC_Action())});
-}
-
 // create Restart button and remove eventListeners from action buttons
 function theEnd(buttons) {
-    // make a restart button
+    // announce the winner
     (pcScore === 5) ? resultDiv.textContent = `PC won!`: resultDiv.textContent = `You won!`;
-    const restartBtn = document.createElement('button')
-    restartBtn.classList.add('restartButton');
-    restartBtn.textContent = 'Restart';
-    restartBtn.addEventListener('click', function(){restart()});
-    document.body.appendChild(restartBtn);
 
     // don't let player press action buttons until restart
     buttons.forEach(btn => btn.removeEventListener('click', round));
